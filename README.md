@@ -6,7 +6,7 @@ Real-time virtual avatar rendering SDK for iOS, supporting audio-driven animatio
 
 - **High-Quality 3D Rendering** - Metal-based GPU-accelerated avatar rendering
 - **Audio-Driven Real-Time Animation** - Send audio data, SDK handles animation and rendering
-- **Dual Mode** - SDK mode (server-driven) and Host mode (client-driven) for flexible integration
+- **Dual Mode** - Direct mode (server-driven) and Backend mode (client-driven) for flexible integration
 - **Swift 6 Concurrency** - Full `Sendable` and `@MainActor` safety
 - **SwiftUI & UIKit** - Native `UIView` with SwiftUI `UIViewRepresentable` wrapper
 - **Local Caching** - Smart LRU cache with configurable retention
@@ -72,8 +72,8 @@ AvatarSDK.initialize(
     appID: "your-app-id",
     configuration: Configuration(
         environment: .intl,
-        audioFormat: AudioFormat(sampleRate: 16000),
-        drivingServiceMode: .sdk,
+        audioFormat: AudioFormat(sampleRate: 16000), // ⚠️ Must match your actual audio sample rate. Mismatched rate will cause playback issues.
+        drivingServiceMode: .direct,
         logLevel: .off
     )
 )
@@ -97,19 +97,28 @@ avatarView.controller.onConversationState = { state in
 }
 
 // 5. Start connection
+// Note: start() initiates the WebSocket connection asynchronously.
+// Wait for onConnectionState === .connected before calling send().
+avatarView.controller.onConnectionState = { state in
+    if case .connected = state {
+        // Connection ready, now safe to send audio
+    }
+}
 avatarView.controller.start()
 
-// 6. Send audio data (PCM16 mono, matching configured sample rate)
+// 6. Send audio data (only after connected, PCM16 mono, matching configured sample rate)
 let audioData: Data = ... // PCM16 audio data
 avatarView.controller.send(audioData, end: false)
-avatarView.controller.send(Data(), end: true) // Signal end of conversation round
+// end=true marks end of audio input, NOT end of playback.
+// Avatar continues playing remaining animation, then returns to idle (notified via onConversationState).
+avatarView.controller.send(Data(), end: true)
 ```
 
 ### Host Mode Example
 
 ```swift
-// 1-3. Same as SDK mode (initialize, load avatar, create view)
-// Use drivingServiceMode: .host in Configuration
+// 1-3. Same as Direct mode (initialize, load avatar, create view)
+// Use drivingServiceMode: .backend in Configuration
 
 // 4. Yield audio data
 let conversationID = avatarView.controller.yield(audioData, end: false)
@@ -199,7 +208,7 @@ let totalSize = try manager.getAllCacheSize() -> Int
 let avatarView = AvatarView(avatar: Avatar)
 
 avatarView.controller: AvatarController
-avatarView.contentTransform: Transform
+avatarView.avatarTransform: Transform
 
 avatarView.pauseRendering()
 avatarView.resumeRendering()
@@ -263,7 +272,7 @@ public struct Configuration {
     init(
         environment: Environment,
         audioFormat: AudioFormat = AudioFormat(),
-        drivingServiceMode: DrivingServiceMode = .sdk,
+        drivingServiceMode: DrivingServiceMode = .direct,
         logLevel: LogLevel = .off
     )
 }
@@ -353,14 +362,18 @@ enum ConversationState: String {
 ### AvatarError
 
 ```swift
-enum AvatarError: String, LocalizedError {
+enum AvatarError: LocalizedError {
     case appIDUnrecognized
     case avatarIDUnrecognized
     case avatarAssetMissing
-    case sessionTokenInvalid
-    case sessionTokenExpired
+    case sessionTokenInvalid          // WebSocket close code 4010
+    case sessionTokenExpired          // WebSocket close code 4010
+    case insufficientBalance          // WebSocket close code 4001
+    case sessionTimeout               // WebSocket close code 4002
+    case concurrentLimitExceeded      // WebSocket close code 4003
     case failedToFetchAvatarMetadata
     case failedToDownloadAvatarAssets
+    case serverError(code: Int, message: String)
 }
 ```
 
@@ -369,6 +382,7 @@ enum AvatarError: String, LocalizedError {
 ```swift
 avatarView.controller.onError = { error in
     print("Error: \(error.localizedDescription)")
+    // error is AvatarError, switch on specific cases for handling
 }
 ```
 
@@ -386,6 +400,24 @@ avatarView.pauseRendering()
 avatarView.resumeRendering()
 
 avatarView.controller.close()
+```
+
+### Switching Avatars
+
+To switch avatars, dispose the old view and create a new one. Do NOT attempt to reuse or reset an existing AvatarView.
+`AvatarSDK.initialize()` and session token do not need to be called again.
+
+```swift
+// 1. Dispose old avatar
+avatarView.controller.close()
+avatarView = nil
+
+// 2. Load new avatar (SDK is already initialized, token is still valid)
+let newAvatar = try await AvatarManager.shared.load("new-character-id")
+
+// 3. Create new AvatarView
+avatarView = AvatarView(avatar: newAvatar)
+avatarView.controller.start()
 ```
 
 **Automatic Lifecycle Handling:**

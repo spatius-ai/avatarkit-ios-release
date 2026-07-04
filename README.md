@@ -30,5 +30,5 @@ Full quickstart, API reference, and integration guides:
 
 ## Support
 
-- Email: code@spatius.net
+- Email: hello@spatialwalk.net
 - Docs: https://docs.spatius.ai

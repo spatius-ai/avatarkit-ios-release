@@ -2,7 +2,7 @@ Pod::Spec.new do |spec|
   spec.name         = "SpatiusAvatarKit"
   # Import name stays `AvatarKit` (`import AvatarKit`).
   spec.module_name  = "AvatarKit"
-  spec.version      = "1.3.0"
+  spec.version      = "1.3.1-beta.1"
   spec.summary      = "SpatiusAvatarKit - Spatius Avatar Kit"
   spec.description  = <<-DESC
                       SpatiusAvatarKit is a high-performance avatar rendering SDK that provides
@@ -18,7 +18,7 @@ Pod::Spec.new do |spec|
   spec.platform     = :ios, "16.0"
 
   spec.source = {
-    :http => "https://github.com/spatius-ai/avatarkit-ios-release/releases/download/v1.3.0/AvatarKit_202607050409.zip"
+    :http => "https://github.com/spatius-ai/avatarkit-ios-release/releases/download/v1.3.1-beta.1/AvatarKit_202607310002.zip"
   }
   spec.vendored_frameworks = "AvatarKit.xcframework"
 

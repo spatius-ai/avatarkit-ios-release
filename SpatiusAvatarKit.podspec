@@ -3,7 +3,7 @@ Pod::Spec.new do |spec|
   # Import name stays `AvatarKit` (`import AvatarKit`).
   spec.module_name  = "AvatarKit"
   spec.version      = "1.3.1-beta.1"
-  spec.summary      = "SpatiusAvatarKit - Spatius Avatar Kit"
+  spec.summary      = "AvatarKit — real-time, audio-driven avatar rendering SDK for iOS."
   spec.description  = <<-DESC
                       SpatiusAvatarKit is a high-performance avatar rendering SDK that provides
                       real-time rendering and audio-driven capabilities. Distributed as a

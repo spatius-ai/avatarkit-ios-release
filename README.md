@@ -1,6 +1,6 @@
 # AvatarKit iOS SDK
 
-Real-time virtual avatar rendering SDK for iOS — audio-driven animation and high-quality 3D rendering with Metal.
+AvatarKit — real-time, audio-driven avatar rendering SDK for iOS.
 
 ## Installation
 
@@ -8,8 +8,20 @@ Real-time virtual avatar rendering SDK for iOS — audio-driven animation and hi
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/spatius-ai/avatarkit-ios-release.git", from: "1.0.0")
+    .package(url: "https://github.com/spatius-ai/avatarkit-ios-release.git", from: "1.3.0")
 ]
+```
+
+### CocoaPods
+
+```ruby
+pod 'SpatiusAvatarKit', '~> 1.3.0'
+```
+
+The import name stays `AvatarKit` regardless of which one you use:
+
+```swift
+import AvatarKit
 ```
 
 ### XCFramework (Binary)

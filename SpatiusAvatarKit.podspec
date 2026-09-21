@@ -2,14 +2,14 @@ Pod::Spec.new do |spec|
   spec.name         = "SpatiusAvatarKit"
   # Import name stays `AvatarKit` (`import AvatarKit`).
   spec.module_name  = "AvatarKit"
-  spec.version      = "1.3.5"
+  spec.version      = "1.3.6-beta.1"
   spec.summary      = "AvatarKit — real-time, audio-driven avatar rendering SDK for iOS."
   spec.description  = <<-DESC
                       SpatiusAvatarKit is a high-performance avatar rendering SDK that provides
                       real-time rendering and audio-driven capabilities. Distributed as a
                       self-contained, prebuilt xcframework.
                       DESC
-  spec.homepage     = "https://github.com/spatius-ai/avatarkit-ios-release"
+  spec.homepage     = "https://spatius.ai/"
   spec.license      = {
     :type => "Commercial",
     :text => "Copyright © 2026 Spatius. All rights reserved. Use is subject to the Spatius commercial license agreement."
@@ -18,7 +18,7 @@ Pod::Spec.new do |spec|
   spec.platform     = :ios, "16.0"
 
   spec.source = {
-    :http => "https://github.com/spatius-ai/avatarkit-ios-release/releases/download/v1.3.5/AvatarKit_202609180015.zip"
+    :http => "https://github.com/spatius-ai/avatarkit-ios-release/releases/download/v1.3.6-beta.1/AvatarKit_202609211508.zip"
   }
   spec.vendored_frameworks = "AvatarKit.xcframework"
 

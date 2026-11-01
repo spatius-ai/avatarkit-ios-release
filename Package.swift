@@ -3,15 +3,15 @@ import PackageDescription
 
 let package = Package(
     name: "AvatarKit",
-    platforms: [.iOS(.v16)],
+    platforms: [.iOS(.v13)],
     products: [
         .library(name: "AvatarKit", targets: ["AvatarKit"])
     ],
     targets: [
         .binaryTarget(
             name: "AvatarKit",
-            url: "https://github.com/spatius-ai/avatarkit-ios-release/releases/download/v1.3.6/AvatarKit_202610021749.zip",
-            checksum: "f41402276de0a72e14a2bd0a6d07fe67a2166d2af12622261f20dd3020c90ce6"
+            url: "https://github.com/spatius-ai/avatarkit-ios-release/releases/download/v1.3.6-compat-ios13/AvatarKit_202611020202.zip",
+            checksum: "35cd09114d358a606a357a3f7af09fc9b422188428c35f5f99844f6519c7e57f"
         )
     ]
 )

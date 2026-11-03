@@ -14,7 +14,14 @@ dependencies: [
 
 ### CocoaPods
 
+CocoaPods trunk no longer accepts new versions, so AvatarKit is published to its own
+[spec repo](https://github.com/spatius-ai/avatarkit-specs). Add it as a source at the top
+of your `Podfile`, and keep the CocoaPods CDN for third-party dependencies:
+
 ```ruby
+source 'https://github.com/spatius-ai/avatarkit-specs.git'
+source 'https://cdn.cocoapods.org/'
+
 pod 'SpatiusAvatarKit', '~> 1.3.0'
 ```
 
